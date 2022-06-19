@@ -1,58 +1,74 @@
 
-// Global Constants
-var movietitle;
-var posterImage;
-var votes; 
-const apiKey = 'bB4KOXu3KgHGnoWGRnCBHsIJqZNNfGmw';
-const pageSize = 9;
-
-// Global Variables
-var currentApiPage = 0;
-var currentSearchTerm = '';
-
-// Page Elements
-const searchForm = document.getElementById('search-form');
+const movieSearchUrl = "https://api.themoviedb.org/3/search/movie"
+const nowPlayingUrl = "https://api.themoviedb.org/3/search/movie/now_playing";
+const movieImageUrl = "https://api.themoviedb.org/3/movie";
+const apiKey='26a6ca6a064e61eeb4b31ebf6a5a3c01';
+const movieArea= document.getElementById('movieArea');
+var currentSearchTerm='';
 const searchInput = document.getElementById('search-input');
-const movieAreaDiv = document.getElementById('movie-area');
-const showMeMoreBtn = document.getElementById('show-me-more-btn');
+const searchForm = document.getElementById('search-form');
+/*
+window.onload=function(){
+const moviedisplay=document.querySelector('movieArea');
+    moviedisplay.addEventListener(`show`, ()=>{
+        const dis=moviedisplay.value;
+        
+        nowplaying(dis);
+    });
+} 
+*/
+function nowplaying(nowPlayingUrl){
+var result=fetch(nowPlayingUrl + "?api_key=" + apikey).then(response => response.json())
+  .then(data => console.log(data));
+  console.log(result);
+}
+async function getdata(searchTerm){
+ 
+    
+//const offset = currentApiPage * pageSize;
+const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key= ${apiKey}&q=${searchTerm}`).then(response => response.json())
+  .then(data => console.log(data));
+  return response;
 
-/** Get results from API. */
-async function getResults(searchTerm) {
-    const offset = currentApiPage * pageSize;
-    const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&q=${searchTerm}`);
-    const jsonResponse = await response.json();
-    return jsonResponse.data;
 }
 
-/** Render list of results. */
-function displayResults(results) {
-    const gifsHTMLString = results.map(gif => `
-        <div class="gif">
-            <img src="${gif.images.original.url}" />
-        </div>
-    `).join('');
-
-    gifAreaDiv.innerHTML = gifAreaDiv.innerHTML + gifsHTMLString;
+function generateHTML(movies){
+movies.foreach(data=>{
+    const  movieTitle=document.createElement('p');
+    movieTitle.innerHTML=`${data.original_title}`;
+    movieTitle.append(movieTitle);
+});
+movieArea.innerHTML=output;
 }
-
-/** On form submit, get results and add to list. */
 async function handleFormSubmit(event) {
     event.preventDefault();
-    gifAreaDiv.innerHTML = '';
+   // movieArea.innerHTML = '';
     currentSearchTerm = searchInput.value;
-    const results = await getResults(currentSearchTerm);
-    displayResults(results);
+    const results = await getdata(currentSearchTerm);
+    generateHTML(results);
     searchInput.value = '';
     currentApiPage++;
     showMeMoreBtn.classList.remove('hidden');
 }
 
 searchForm.addEventListener('submit', handleFormSubmit);
-
-async function handleShowMeMoreClick(event) {
-    const results = await getResults(currentSearchTerm);
-    displayResults(results);
-    currentApiPage++;
+/*
+function formSubmit(ev){
+    var formel=document.querySelector("form");
+    formel.addEventListener("submit",(ev)=>{
+        console.log(ev.target.searchTerm.value);
+        getdata(ev.target.searchTerm.value);
+    });
 }
+const movieArea=document.querySelector('movieArea');
+movieArea.addEventListener(`submit`,formSubmit(onclick))
+/*
+function generateMore(movie){
+    return '<img src="${movie.img}">
+            <span>${movie.name}</span>
+            <span>${movie.rating}</span> 
+            ' 
 
-showMeMoreBtn.addEventListener('click', handleShowMeMoreClick);
+}*/
+
+

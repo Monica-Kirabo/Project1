@@ -18,7 +18,7 @@ const moviedisplay=document.querySelector('movieArea');
         nowplaying(dis);
     });
 } 
-
+*/
 function nowplaying(nowPlayingUrl){
 var result=fetch(nowPlayingUrl + "?api_key=" + apikey).then(response => response.json())
   .then(data => console.log(data));
@@ -38,7 +38,10 @@ function generateHTML(movies){
 movies.foreach(data=>{
     const  movieTitle=document.createElement('p');
     movieTitle.innerHTML=`${data.original_title}`;
+  const  movieRating=document.createElement('p');
+    movieRating.innerHTML=`${data.original_Rating}`;
     movieTitle.append(movieTitle);
+    movieRating.append(movieRating);
 });
 movieArea.innerHTML=output;
 }
@@ -54,7 +57,7 @@ async function handleFormSubmit(event) {
 }
 
 searchForm.addEventListener('submit', handleFormSubmit);
-/*
+
 function formSubmit(ev){
     var formel=document.querySelector("form");
     formel.addEventListener("submit",(ev)=>{
@@ -62,49 +65,14 @@ function formSubmit(ev){
         getdata(ev.target.searchTerm.value);
     });
 }
-const movieArea=document.querySelector('movieArea');
-movieArea.addEventListener(`submit`,formSubmit(onclick))
-/*
+const movieAr=document.querySelector('movieArea');
+movieAr.addEventListener(`submit`,formSubmit(onclick))
+
 function generateMore(movie){
     return '<img src="${movie.img}">
             <span>${movie.name}</span>
             <span>${movie.rating}</span> 
             ' 
 
-}*/
-
-nowplayingmovies(nowPlayingUrl);
-async function nowplayingmovies(url){
-    const resp=await fetch(url);
-    const respData=await resp.json();
-    console.log(respData);
-    displaymovies(respData.results);
 }
 
-function displaymovies(movies){
-   // movieArea.innerHTML=" ";
-    movies.foreach((movie)=>{
-        const{poster_path, title, vote_average, overview}=movie;
-
-        const movieel=document.createElement("div");
-        movieel.classList.add("movie");
-        movieel.innerHTML=`<img src="${IMGPATH+poster_path}" alt="${title}" /> 
-        <div class="movie-info">
-        <h3>${title}</h3>
-        <div class="overview">
-        <h3>overview </h3>
-        ${overview}
-        </div>`;
-        movieArea.appendChild(movieel);
-
-    });
-}
-searchForm.addEventListener("submit",(e)=>{
-e.preventDefault();
-const searchTerm=searchInput.value;
-if (searchTerm){
-    nowplayingmovies(movieSearchUrl+searchTerm);
-    searchInput.value=" ";
-}
-}
-);
